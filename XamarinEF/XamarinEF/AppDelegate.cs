@@ -20,14 +20,11 @@ namespace XamarinEF
 			Window = new UIWindow(UIScreen.MainScreen.Bounds);
 			Window.MakeKeyAndVisible();
 
-			Window.RootViewController = new UINavigationController(new TableViewController());
+			var todoRepository = new TodoRepository();
 
-			// create database if needed
-			using (var context = new DatabaseContext())
-			{
-				context.Database.EnsureCreated();
-				context.SaveChanges();
-			}
+			Window.RootViewController = new UINavigationController(new TableViewController(todoRepository));
+
+			todoRepository.Initialize();
 
 			return true;
 		}

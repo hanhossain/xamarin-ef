@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Foundation;
-using Microsoft.EntityFrameworkCore;
 using UIKit;
 
 namespace XamarinEF
@@ -12,7 +11,14 @@ namespace XamarinEF
 	{
 		private const string _cellId = "cellId";
 
+		private readonly ITodoRepository _todoRepository;
+
 		private List<TodoItem> _todoCache = new List<TodoItem>();
+
+		public TableViewController(ITodoRepository todoRepository)
+		{
+			_todoRepository = todoRepository;
+		}
 
 		public override async void ViewDidLoad()
 		{
@@ -42,10 +48,7 @@ namespace XamarinEF
 				await PresentViewControllerAsync(alert, true);
 			});
 
-			using (var context = new DatabaseContext())
-			{
-				_todoCache = await context.TodoItems.ToListAsync();
-			}
+			_todoCache = await _todoRepository.GetTodoItemsAsync();
 		}
 
 		public override nint RowsInSection(UITableView tableView, nint section)
@@ -78,37 +81,25 @@ namespace XamarinEF
 
 		private async Task AddTodoItem(string description)
 		{
-			using (var context = new DatabaseContext())
+			var todoItem = await _todoRepository.AddTodoItemAsync(new TodoItem()
 			{
-				var todoItem = new TodoItem()
-				{
-					Description = description
-				};
+				Description = description
+			});
 
-				var savedItem = context.Add(todoItem);
+			_todoCache.Add(todoItem);
 
-				await context.SaveChangesAsync();
-
-				_todoCache.Add(savedItem.Entity);
-
-				var indexPath = NSIndexPath.FromRowSection(_todoCache.Count - 1, 0);
-				InvokeOnMainThread(() => TableView.InsertRows(new[] { indexPath }, UITableViewRowAnimation.Automatic));
-			}
+			var indexPath = NSIndexPath.FromRowSection(_todoCache.Count - 1, 0);
+			InvokeOnMainThread(() => TableView.InsertRows(new[] { indexPath }, UITableViewRowAnimation.Automatic));
 		}
 
 		private async Task DeleteTodoItem(NSIndexPath indexPath)
 		{
-			using (var context = new DatabaseContext())
-			{
-				var cachedItem = _todoCache[indexPath.Row];
-				var todoItem = await context.TodoItems.FindAsync(cachedItem.Id);
-				context.Remove(todoItem);
+			var cachedItem = _todoCache[indexPath.Row];
 
-				await context.SaveChangesAsync();
-				_todoCache.RemoveAt(indexPath.Row);
+			await _todoRepository.DeleteTodoItemAsync(cachedItem.Id);
+			_todoCache.RemoveAt(indexPath.Row);
 
-				InvokeOnMainThread(() => TableView.DeleteRows(new[] { indexPath }, UITableViewRowAnimation.Automatic));
-			}
+			InvokeOnMainThread(() => TableView.DeleteRows(new[] { indexPath }, UITableViewRowAnimation.Automatic));
 		}
 	}
 }
