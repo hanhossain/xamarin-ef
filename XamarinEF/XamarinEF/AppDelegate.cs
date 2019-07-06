@@ -20,10 +20,14 @@ namespace XamarinEF
 			Window = new UIWindow(UIScreen.MainScreen.Bounds);
 			Window.MakeKeyAndVisible();
 
-			Window.RootViewController = new UIViewController()
+			Window.RootViewController = new UINavigationController(new TableViewController());
+
+			// create database if needed
+			using (var context = new DatabaseContext())
 			{
-				View = { BackgroundColor = UIColor.White }
-			};
+				context.Database.EnsureCreated();
+				context.SaveChanges();
+			}
 
 			return true;
 		}
