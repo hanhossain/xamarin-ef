@@ -1,0 +1,23 @@
+
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XamarinEF", "XamarinEF\XamarinEF.csproj", "{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|iPhoneSimulator = Debug|iPhoneSimulator
+		Release|iPhoneSimulator = Release|iPhoneSimulator
+		Debug|iPhone = Debug|iPhone
+		Release|iPhone = Release|iPhone
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}.Debug|iPhone.Build.0 = Debug|iPhone
+		{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}.Release|iPhone.ActiveCfg = Release|iPhone
+		{E8692B4D-03E1-481E-A5CE-447E2EBB52A5}.Release|iPhone.Build.0 = Release|iPhone
+	EndGlobalSection
+EndGlobal
