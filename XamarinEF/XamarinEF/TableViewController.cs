@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Foundation;
 using UIKit;
+using XamarinEF.Core;
 
 namespace XamarinEF
 {

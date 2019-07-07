@@ -1,14 +1,16 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 
-namespace XamarinEF
+namespace XamarinEF.Core
 {
 	public class DatabaseContext : DbContext
 	{
+		public DbSet<TodoItem> TodoItems { get; set; }
+
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
+			// needed for ios
 			SQLitePCL.Batteries_V2.Init();
 
 			// found path from:
@@ -21,15 +23,5 @@ namespace XamarinEF
 
 			optionsBuilder.UseSqlite($"Filename={databasePath}");
 		}
-
-		public DbSet<TodoItem> TodoItems { get; set; }
-	}
-
-	public class TodoItem
-	{
-		[Key]
-		public int Id { get; set; }
-
-		public string Description { get; set; }
 	}
 }

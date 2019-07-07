@@ -141,9 +141,14 @@
         <Compile Include="Main.cs" />
         <Compile Include="AppDelegate.cs" />
         <Compile Include="TableViewController.cs" />
-        <Compile Include="DatabaseContext.cs" />
         <Compile Include="TodoRepository.cs" />
         <Compile Include="ITodoRepository.cs" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\XamarinEF.Core\XamarinEF.Core.csproj">
+        <Project>{3CDC93EA-6B15-4CC4-8528-A000E7913C9B}</Project>
+        <Name>XamarinEF.Core</Name>
+      </ProjectReference>
     </ItemGroup>
     <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
 </Project>

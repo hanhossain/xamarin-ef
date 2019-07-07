@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using XamarinEF.Core;
 
 namespace XamarinEF
 {
@@ -10,9 +11,7 @@ namespace XamarinEF
 		{
 			using (var context = new DatabaseContext())
 			{
-				// TODO: look into migrations
-				context.Database.EnsureCreated();
-				context.SaveChanges();
+				context.Database.Migrate();
 			}
 		}
 

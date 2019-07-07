@@ -1,4 +1,7 @@
-﻿using Foundation;
+﻿using System;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Foundation;
 using UIKit;
 
 namespace XamarinEF
