@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Foundation;
 using UIKit;
@@ -25,7 +27,7 @@ namespace XamarinEF
 		{
 			base.ViewDidLoad();
 
-			TableView.RegisterClassForCellReuse(typeof(UITableViewCell), _cellId);
+			TableView.RegisterClassForCellReuse(typeof(SubtitleTableViewCell), _cellId);
 
 			Title = "Todo";
 
@@ -42,7 +44,7 @@ namespace XamarinEF
 				var ok = UIAlertAction.Create("Ok", UIAlertActionStyle.Default, async alertAction =>
 				{
 					var text = alert.TextFields.First().Text;
-					await AddTodoItem(text);
+					await AddTodoItemAsync(text);
 				});
 				alert.AddAction(ok);
 
@@ -61,7 +63,9 @@ namespace XamarinEF
 		{
 			var cell = tableView.DequeueReusableCell(_cellId, indexPath);
 
-			cell.TextLabel.Text = _todoCache[indexPath.Row].Description;
+			var item = _todoCache[indexPath.Row];
+			cell.TextLabel.Text = item.Description;
+			cell.DetailTextLabel.Text = item.Completed ? "Done" : string.Empty;
 
 			return cell;
 		}
@@ -73,14 +77,28 @@ namespace XamarinEF
 				"Delete",
 				async (contextualAction, view, success) =>
 				{
-					await DeleteTodoItem(indexPath);
+					await DeleteTodoItemAsync(indexPath);
 					success(true);
 				});
 
 			return UISwipeActionsConfiguration.FromActions(new[] { deleteAction });
 		}
 
-		private async Task AddTodoItem(string description)
+        public override UISwipeActionsConfiguration GetLeadingSwipeActionsConfiguration(UITableView tableView, NSIndexPath indexPath)
+        {
+			var completedAction = UIContextualAction.FromContextualActionStyle(
+				UIContextualActionStyle.Normal,
+				"Complete",
+				async (contextualAction, view, success) =>
+                {
+					await CompleteTodoItemAsync(indexPath);
+					success(true);
+                });
+
+			return UISwipeActionsConfiguration.FromActions(new[] { completedAction });
+        }
+
+        private async Task AddTodoItemAsync(string description)
 		{
 			var todoItem = await _todoRepository.AddTodoItemAsync(new TodoItem()
 			{
@@ -93,7 +111,7 @@ namespace XamarinEF
 			InvokeOnMainThread(() => TableView.InsertRows(new[] { indexPath }, UITableViewRowAnimation.Automatic));
 		}
 
-		private async Task DeleteTodoItem(NSIndexPath indexPath)
+		private async Task DeleteTodoItemAsync(NSIndexPath indexPath)
 		{
 			var cachedItem = _todoCache[indexPath.Row];
 
@@ -102,5 +120,15 @@ namespace XamarinEF
 
 			InvokeOnMainThread(() => TableView.DeleteRows(new[] { indexPath }, UITableViewRowAnimation.Automatic));
 		}
+
+		private async Task CompleteTodoItemAsync(NSIndexPath indexPath)
+        {
+			var cachedItem = _todoCache[indexPath.Row];
+
+			await _todoRepository.CompleteTodoItemAsync(cachedItem.Id);
+			cachedItem.Completed = true;
+
+			InvokeOnMainThread(() => TableView.ReloadRows(new[] { indexPath }, UITableViewRowAnimation.Automatic));
+        }
 	}
 }

@@ -19,7 +19,7 @@ namespace XamarinEF
 		{
 			using (var context = new DatabaseContext())
 			{
-				return await context.TodoItems.ToListAsync();
+				return await context.TodoItems.AsNoTracking().ToListAsync();
 			}
 		}
 
@@ -43,5 +43,13 @@ namespace XamarinEF
 				await context.SaveChangesAsync();
 			}
 		}
+
+		public async Task CompleteTodoItemAsync(int id)
+        {
+			using var context = new DatabaseContext();
+			var savedItem = await context.TodoItems.FindAsync(id);
+			savedItem.Completed = true;
+			await context.SaveChangesAsync();
+        }
 	}
 }

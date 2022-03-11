@@ -13,5 +13,7 @@ namespace XamarinEF
 		Task<TodoItem> AddTodoItemAsync(TodoItem todoItem);
 
 		Task DeleteTodoItemAsync(int id);
+
+		Task CompleteTodoItemAsync(int id);
 	}
 }
